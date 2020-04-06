@@ -102,7 +102,8 @@ def formato(Archivo):
 			vector=vector+personal[i+1][0]
 			
 			p3=sorted(p2, key=itemgetter(1))
-			listado=listado+p3[0]
+			listado=listado+[p3[0][0]]
+			#print(len(p3[0]))
 			#c.k(p3,20203191743)
 			m=[]
 			n=[]
@@ -140,9 +141,10 @@ def formato(Archivo):
 			break
 
 	#c.k([len(matriz)],20203191913)
-	ochentaL= int(len(listado)*0.80)
+	ochentaL= int((len(listado)-1)*0.80)
 	ochentaM= int(len(matriz)*0.80)
-	
+	c.L(listado, 20204021900)
+	c.L(matriz,20204021900)
 	#c.k(['Se rettornan 2 matrices y dos vectores: ',['Listado: ', str(len(listado[0:ochentaL]))],['Matriz: '+str(len(matriz[0:ochentaM]))],['Listado: ',str(len(listado[ochentaL:len(listado)]))],['Matriz: ',str(len(matriz[ochentaM:len(matriz)]))]],20203192131)
-	return np.array(listado[0:ochentaL]),np.matrix(matriz[0:ochentaM]),np.array(listado[ochentaL:len(listado)]),np.matrix(matriz[ochentaM:len(matriz)])
+	return np.array(listado[1:ochentaL+1]),np.matrix(matriz[0:ochentaM]),np.array(listado[ochentaL+2:len(listado)]),np.matrix(matriz[ochentaM+1:len(matriz)])
 	#return (listado[0:ochentaL]),(matriz[0:ochentaM]),(listado[ochentaL:len(listado)]),(matriz[ochentaM:len(matriz)])

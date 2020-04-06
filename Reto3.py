@@ -44,7 +44,7 @@ criterion = nn.MSELoss()
 optimizer = optim.RMSprop(sae.parameters(), lr = 0.01, weight_decay = 0.5)
 
 # Training the SAE
-nb_epoch = 2
+nb_epoch = 50
 
 for epoch in range(1, nb_epoch + 1):
     train_loss = 0
@@ -77,7 +77,7 @@ for userd_id in range (nb_users):
         
     outputgroup.append(outputScaling)
 
-def predict(psytestPath):
+def predict(candidatesPath, psytestPath):
     Apruba = np.zeros(nb_users)
     for i in range (len(psytestPath)):
         if (psytestPath[i][0]>= 0.5):
@@ -85,8 +85,5 @@ def predict(psytestPath):
        
     return Apruba
 
-
-Permanencia = predict(outputgroup)
-print (Permanencia)
-    
-    
+Apruba = predict(candidatos, outputgroup)
+print(Apruba)

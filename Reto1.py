@@ -9,7 +9,6 @@ import torch.nn.parallel
 import torch.optim as optim
 import torch.utils.data
 from torch.autograd import Variable
-
 import os
 import TrozarCSV
 import Analizar
@@ -22,20 +21,16 @@ def Organizar(candidatos):
 	print('Inicio del clasificador')
 	TrozarCSV.io('files/Candidates.csv','Salidas/Paralelo.csv' , 'Salidas/Lista.csv', desde, hasta, [''])
 	[candidatosTrain, matrizTrain, candidatosTest, matrizTest]=Analizar.formato('Salidas/Lista.csv')
-	
-	Candi2=[]
-	for i in Candi:
-		if i!= '':
-			Candi2+=[i]
- 
-	ochenta=int(len(Candi)*0.80)
-	return Candi2[0:ochenta], matrizTrain, Candi2[ochenta:len(Candi)], matrizTest
+
+	return candidatosTrain, matrizTrain, candidatosTest, matrizTest
 
 
 candidatosTrain, matrizTrain, candidatosTest, matrizTest=Organizar('files/Candidates.csv')
 
-nb_users = int(max(len(matrizTrain),len(matrizTest)))
-nb_candidate = int(max(len(matrizTrain[0]),len(matrizTest[0])))
+candidatosTrain = np.asarray(candidatosTrain )
+matrizTrain = np.asarray(matrizTrain)
+nb_users = len(matrizTrain)
+nb_candidate = len(matrizTrain[0])
 
 # Feature Scaling
 from sklearn.preprocessing import MinMaxScaler
@@ -68,13 +63,13 @@ criterion = nn.MSELoss()
 optimizer = optim.RMSprop(sae.parameters(), lr = 0.01, weight_decay = 0.5)
 
 # Training the SAE
-nb_epoch = 50
+nb_epoch = 200
 
 for epoch in range(1, nb_epoch + 1):
     train_loss = 0
     s = 0.
     for id_user in range(nb_users):
-        input = Variable(training_set[id_user]).unsqueeze(0)
+        input = Variable(training_set[id_user].T).unsqueeze(0)
         target = input.clone()
         if torch.sum(target.data > 0) > 0:
             output = sae(input)
@@ -128,29 +123,109 @@ def chi2_distance(featuresA, featuresB, eps = 1e-10):
 	# return the chi-squared distance
 	return d
 
+def logtolin(matriz):
+	j=0
+	matriz2=[]
+	matriz3=matriz
+	NoCeros=not(0 in matriz)
+	while not(NoCeros):
+		matriz2=[]
+		for i in matriz3:
+			matriz2.append(i)
+			j+=1
+		j=0
+		matriz2[matriz2.index(min(matriz2))]=78
+		NoCeros=not(0 in matriz2)
+		matriz3=matriz2
+	segundomenor=min(matriz2)
+	#print(f'Segundomenor {segundomenor}')
+	for i in matriz:
+		matriz[j]=i+segundomenor
+		j=j+1
+
+	#print(matriz)
+	minimus=segundomenor
+	maximus=max(matriz)
+	k= 1/ (np.log(minimus)-np.log(maximus))
+	j=0
+	lineal=matriz
+	#print(k)
+	for i in matriz:
+		#print(i)
+		lineal[j]=k*(np.log(minimus)-np.log(i))
+		j+=1
+	return lineal 
+
+
+
 def fit(vacantsPath, applicationsPath  ):
     best_candidate = np.zeros(len(applicationsPath))
     for i in range (len(applicationsPath)):
         probabilityFe = chi2_distance(vacantsPath, applicationsPath[i])
         best_candidate[i]+= probabilityFe
-    
-    position_candidate = []
-    for i in range (0, 5):
-        indice_min = int(np.where(best_candidate==min(best_candidate))[0])
-        
-        best_candidate = np.delete(best_candidate, indice_min)
-        position_candidate.append(indice_min)
-      
-    position_candidate.pop(0)
-    mejores = []
-    for i in position_candidate:
-        mejores.append(candidatosTrain[i])
-    
-    return mejores
 
-best_candidato = fit(outputgroup[-1], outputgroup)
-print(best_candidato)
     
+    return best_candidate
+
+best_candidate = fit(outputgroup[-1], outputgroup)
+position_candidate = []
+for i in range (0, 5):
+    indice_min = int(np.where(best_candidate==min(best_candidate))[0][0])
+    best_candidate = np.delete(best_candidate, indice_min)
+    position_candidate.append(indice_min)
+
+position_candidate.pop(0)          
+mejores_candidatos = []
+for i in position_candidate:
+    mejores_candidatos.append(candidatosTrain[i])
+
+best_candidate = fit(outputgroup[-1], outputgroup)
+best_candidatonorm = logtolin(best_candidate)
+
+puntuacion = []
+for i in position_candidate:
+    puntuacion.append(best_candidatonorm[i])
+
+putuacion_100 = []    
+for i in puntuacion:
+    n = (1-i)
+    putuacion_100.append(n)
+
+aprueba = []
+for i in putuacion_100:
+    if (i == max(putuacion_100)):
+        aprueba.append(1)
+    else:
+        aprueba.append(0)
+        
+import csv
+total = [[int(mejores_candidatos[i]),float(putuacion_100[i]) , int(aprueba[i])] for i in range(len(position_candidate))]
+
+myFile = open('Salidas/Salida_Reto1.csv', 'w')
+with myFile:
+    writer = csv.writer(myFile)
+    writer.writerows(total)
+     
+print("Writing complete")
+    
+    
+    
+    
+    
+    
+
+
+
+    
+    
+    
+    
+    
+    
+    
+    
+
+
 
 
 

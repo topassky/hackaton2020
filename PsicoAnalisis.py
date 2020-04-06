@@ -82,10 +82,10 @@ def formatear(Archivo):
 
 			if bandera== True:
 				matriz+=[renglon]
-				candidatos+= roe[0]
+				candidatos+=[ roe[0]]
 
-				
-	c.k (matriz, 20203201703)
+	c.L (matriz, 20203201703)
+	c.L ( candidatos, 20204021840)
 	ochentac=int(len(candidatos)*0.80)
 	ochentam=int(len(matriz)*0.80)
 	return (candidatos,matriz)

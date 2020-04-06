@@ -87,7 +87,8 @@ def io(entrada,out2, lista, desde, hasta, filtros):
 										employee_writer2.writerow([row[0],puesto[0]+100,y])
 									
 							
-	print('Se ha generado el fichero en la carpeta "Salida"')								
+	print('Se ha generado el fichero en la carpeta "Salida"')
+
 	return Candi
 
 def Celdas(criterio, d):
@@ -149,7 +150,7 @@ def Celdas(criterio, d):
 		#compania= Experiencia[Experiencia.find('"compañia"')+len('"compañia"')+1:Experiencia.find('","')+1]
 	#print(empresa)
 	if '"test_type"' ==criterio:
-		c.k(empresa,20203200841)
+		True#c.k(empresa,20203200841)
 	return(empresa, index)
 
 

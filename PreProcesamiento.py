@@ -14,13 +14,13 @@ def Organizar(candidatos):
 	Candi=TrozarCSV.io('files/Candidates.csv','Salidas/Paralelo.csv' , 'Salidas/Lista.csv', desde, hasta, [''])
 	[candidatosTrain, matrizTrain, candidatosTest, matrizTest]=Analizar.formato('Salidas/Lista.csv')
 	
-	Candi2=[]
+	'''Candi2=[]
 	for i in Candi:
 		if i!= '':
-			Candi2+=[i]
+			Candi2+=[i]'''
  
-	ochenta=int(len(Candi)*0.80)
-	return Candi2[0:ochenta], matrizTrain, Candi2[ochenta:len(Candi)], matrizTest
+
+	return candidatosTrain, matrizTrain, candidatosTest, matrizTest
 
 
 candidatosTrain, matrizTrain, candidatosTest, matrizTest=Organizar('files/Candidates.csv')

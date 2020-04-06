@@ -1,5 +1,4 @@
-
-q# Recurrent Neural Network
+# Recurrent Neural Network
 
 # Part 1 - Data Preprocessing
 
@@ -96,3 +95,16 @@ dataset_test = pd.read_csv('files/trm_test.csv')
 real_stock_price = dataset_test.iloc[:, 1:2].values
 
 output = predict_trm(dataset_test)
+
+import csv
+myFile = open('Salidas/SalidaReto2.csv', 'w')
+
+with myFile:
+    writer = csv.writer(myFile)
+    for i in range (0, len(output)):
+        filas = ""+":"+str(output[i][0])+"\n"
+        myFile.write(filas)
+
+print("Se ha terminado de copiar")
+
+
