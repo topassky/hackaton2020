@@ -34,7 +34,7 @@ launchpadlib==1.10.6
 lazr.restfulclient==0.13.5
 lazr.uri==1.0.3
 lightdm-gtk-greeter-settings==1.2.2
-lxml==4.2.4
+lxml==4.6.5
 menulibre==2.2.0
 mugshot==0.4.0
 netifaces==0.10.4
